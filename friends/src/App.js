@@ -1,19 +1,26 @@
 import React from 'react';
 import { Link, Route, withRouter } from 'react-router-dom';
-import Singin from './signIn';
+import Signin from './signIn';
+import { getToken } from './utils/server';
+import Logout from './logout';
+import ProtectedRoute from './ProtectedRoute';
 import './App.css';
 
 function App() {
+  const signedIn = getToken()
+
   return (
     <div className="App">
-      <nav>
-				<Link to="/">Home</Link>
-				<Link to='/signin'>Sign In</Link>
-				<Link to='/account'>My Account</Link>
-				<Link to='/logout'>Log Out</Link>
+      <nav className='nav'>
+				{signedIn && <Link to="/">Home</Link>}
+				{!signedIn && <Link to='/signin'>Sign In</Link>}
+        {signedIn && <Link to='/friends'>Friends</Link>}
+				{signedIn && <Link to='/logout'>Log Out</Link>}
 			</nav>
 
-      <Route exact path='/signin' component={Singin} />
+      <Route exact path='/signin' component={Signin} />
+      {/* <ProtectedRoute exact path='/account' component={Friends} /> */}
+			<ProtectedRoute exact path='/logout' component={Logout} />
     </div>
   );
 }
